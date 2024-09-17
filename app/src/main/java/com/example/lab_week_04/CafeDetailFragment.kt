@@ -19,12 +19,18 @@ private const val ARG_PARAM2 = "param2"
  */
 private const val TAB_CONTENT = "TAB_CONTENT"
 class CafeDetailFragment : Fragment() {
-    private var content: String? = null
+    // TODO: Rename and change types of parameters
+    private var param1: String? = null
+    private var param2: String? = null
+
+    private val cafeDesc: TextView?
+        get() = view?.findViewById(R.id.cafe_desc)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            content = it.getString(TAB_CONTENT)
+            param1 = it.getString(ARG_PARAM1)
+            param2 = it.getString(ARG_PARAM2)
         }
     }
 
@@ -32,20 +38,40 @@ class CafeDetailFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-// Inflate the layout for this fragment
+        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_cafe_detail, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.findViewById<TextView>(R.id.content_description)
-            ?.text = content
+        val cafeId = arguments?.getInt(CAFE_ID, 0) ?: 0
+        setCafeData(cafeId) // Use the passed cafeId from arguments
+    }
+
+
+    fun setCafeData(id: Int){
+        when(id){
+            CAFE_STARBUCKS -> {
+                cafeDesc?.text = getString(R.string.starbucks_desc)
+            }
+            CAFE_JANJIJIWA -> {
+                cafeDesc?.text = getString(R.string.janjijiwa_desc)
+            }
+            CAFE_KOPIKENANGAN -> {
+                cafeDesc?.text = getString(R.string.kopikenangan_desc)
+            }
+        }
     }
 
     companion object {
-        fun newInstance(content: String) = CafeDetailFragment().apply {
+        private const val CAFE_ID = "CAFE_ID"
+        const val CAFE_STARBUCKS = 1
+        const val CAFE_JANJIJIWA = 2
+        const val CAFE_KOPIKENANGAN = 3
+
+        fun newInstance(cafeId: Int) = CafeDetailFragment().apply {
             arguments = Bundle().apply {
-                putString(TAB_CONTENT, content)
+                putInt(CAFE_ID, cafeId)
             }
         }
     }
